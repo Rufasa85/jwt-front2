@@ -1,10 +1,12 @@
 import {useEffect,useState} from "react"
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
 import Home from "./pages/Home"
+import Login from "./pages/Login"
 import API from "./utils/API"
+import Navbar from "./components/Navbar"
+import Profile from "./pages/Profile"
  function App() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  
   const [user, setUser] = useState({
     id:0,
     email:''
@@ -31,9 +33,33 @@ import API from "./utils/API"
     })
   },[])
  
-  const submitHandle= e=>{
-    e.preventDefault();
+  const submitLoginHandle= (email,password)=>{
     API.login(email,password).then(res=>{
+      if(!res.ok){
+        setUser({userId:0,email:""});
+        setToken("")
+        return;
+      }
+       return res.json()
+    }).then(data=>{
+      console.log(data)
+      setUser({
+        id:data.user.id,
+        email:data.user.email
+      })
+      setToken(data.token)
+      localStorage.setItem("token",data.token)
+     
+    })
+  }
+ 
+  const submitSignupHandle= (email,password)=>{
+    API.signup(email,password).then(res=>{
+      if(!res.ok){
+        setUser({userId:0,email:""});
+        setToken("")
+        return;
+      }
        return res.json()
     }).then(data=>{
       console.log(data)
@@ -46,15 +72,23 @@ import API from "./utils/API"
     })
   }
 
+  const logoutClick = ()=>{
+    localStorage.removeItem("token");
+    setUser({
+      id:0,
+      email:''
+    })
+    setToken("")
+  }
 
   return (
     <div className="App">
-     <h1>Navbar placeholder</h1>
      <Router>
+     <Navbar userId={user.id} logout={logoutClick}/>
       <Routes>
         <Route path="/" element={<Home/>}/>
-        <Route path="/login" element={<h1>Login Page</h1>}/>
-        <Route path="/users/:id" element={<h1>Profile Page</h1>}/>
+        <Route path="/login" element={<Login userId={user.id} handleLogin = {submitLoginHandle} handleSignup={submitSignupHandle}/>}/>
+        <Route path="/users/:id" element={<Profile token={token}/>}/>
         <Route path="*" element={<h1>404 page</h1>}/>
       </Routes>
      </Router>

@@ -1,0 +1,7 @@
+.AuthForm{
+    border:1px solid black;
+    background:deepskyblue;
+    width:50%;
+    box-sizing: border-box;
+    display: inline-block;
+}

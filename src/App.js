@@ -1,4 +1,7 @@
 import {useEffect,useState} from "react"
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
+import Home from "./pages/Home"
+import API from "./utils/API"
  function App() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -10,11 +13,7 @@ import {useEffect,useState} from "react"
 
   useEffect(()=>{
     const storedToken = localStorage.getItem("token");
-    fetch("http://localhost:3001/check-token",{
-      headers:{
-        Authorization:`Bearer ${storedToken}`
-      }
-    }).then(res=>{
+    API.checkToken(storedToken).then(res=>{
       if(!res.ok){
        console.log("invalid token!")
        localStorage.removeItem("token")
@@ -34,16 +33,7 @@ import {useEffect,useState} from "react"
  
   const submitHandle= e=>{
     e.preventDefault();
-    fetch("http://localhost:3001/login",{
-        method:"POST",
-        body:JSON.stringify({
-          email,
-          password
-        }),
-        headers:{
-            "Content-Type":"application/json"
-        }
-    }).then(res=>{
+    API.login(email,password).then(res=>{
        return res.json()
     }).then(data=>{
       console.log(data)
@@ -59,18 +49,15 @@ import {useEffect,useState} from "react"
 
   return (
     <div className="App">
-     <h1>Hello</h1>
-     {user.id?<h3>Welcome back, {user.email}</h3>:(
-     <>
-     
-     <h3>Login</h3>
-     <form onSubmit={submitHandle}>
-      <input name="email" placeholder="email" value={email} onChange={e=>setEmail(e.target.value)}/>
-      <input name="password" type="password" value={password} onChange={e=>setPassword(e.target.value)}/>
-      <button>Login!</button>
-     </form>
-   </>
-   )}
+     <h1>Navbar placeholder</h1>
+     <Router>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/login" element={<h1>Login Page</h1>}/>
+        <Route path="/users/:id" element={<h1>Profile Page</h1>}/>
+        <Route path="*" element={<h1>404 page</h1>}/>
+      </Routes>
+     </Router>
     </div>
   );
 }

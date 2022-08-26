@@ -1,0 +1,25 @@
+*{
+    margin:0;
+    padding:0;
+}
+
+.UserIcon {
+    background:red;
+    width:30%;
+    display: inline-block;
+}
+
+.UserIcon .icon {
+    border:1px solid black;
+    box-sizing: border-box;
+    width:258px;
+    display: flex;
+    flex-wrap:wrap;
+}
+
+.UserIcon .icon .pixel {
+    box-sizing: border-box;
+    border:1px solid black;
+    width:16px;
+    height:16px;
+}

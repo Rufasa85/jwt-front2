@@ -19,7 +19,7 @@
 
 .UserIcon .icon .pixel {
     box-sizing: border-box;
-    border:1px solid black;
+    /* border:1px solid black; */
     width:16px;
     height:16px;
 }

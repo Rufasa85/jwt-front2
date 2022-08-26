@@ -6,6 +6,7 @@ export default function IconEditor(props) {
     const [name, setName] = useState("")
     const [selectedColor, setSelectedColor] = useState("#bada55")
     const [pixels,setPixels] = useState([])
+    const [dragging,setDragging] = useState(false);
     useEffect(() => {
         const startingPixels =[];
       for(var i =0; i<256;i++){
@@ -19,6 +20,12 @@ export default function IconEditor(props) {
         pixelCopy[i] = selectedColor;
         setPixels(pixelCopy);
     }
+    const clickAndDrag = (i)=>{
+        console.log(dragging,i)
+        if(dragging){
+            colorIn(i)
+        }
+    }
 
     const createIcon=e=>{
         e.preventDefault();
@@ -30,13 +37,13 @@ export default function IconEditor(props) {
   return (
     <div className="IconEditor">
         <h3>Icon editor component</h3>
-    <form onSubmit={createIcon}>
+    <form  onMouseDown={()=>setDragging(true)}  onMouseUp={()=>setDragging(false)} onSubmit={createIcon}>
         <input placeholder='name' value={name} onChange={e=>setName(e.target.value)}/>
         <input type="color" value={selectedColor} onChange={e=>setSelectedColor(e.target.value)}/>
         <div className="colorForm">
             {pixels.map((pix,i)=><div key={i} className="pixel" style={{
                 backgroundColor:pix
-            }} onClick={()=>colorIn(i)}></div>)}
+            }} onClick={()=>colorIn(i)} onMouseEnter={()=>clickAndDrag(i)}></div>)}
         </div>
         <button>Save!</button>
     </form>
